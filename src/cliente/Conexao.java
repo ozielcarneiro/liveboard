@@ -35,7 +35,7 @@ public class Conexao extends Thread {
 
     public void run() {
         try {
-            socket = new Socket("localhost", 1234);
+            socket = new Socket("localhost", 587);
             input = new DataInputStream(socket.getInputStream());
             output = new DataOutputStream(socket.getOutputStream());
             while (socket.isConnected()) {
@@ -65,6 +65,15 @@ public class Conexao extends Thread {
         }
     }
 
+    public void close(){
+        try {
+            socket.close();
+            this.interrupt();
+        } catch (IOException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void atualizar(String action) {
         try {
             output.writeUTF(action);

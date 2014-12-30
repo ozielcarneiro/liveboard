@@ -26,7 +26,7 @@ public class Servidor {
     public void start() {
         list = new ArrayList<ConnectionHandler>();
         try {
-            server = new ServerSocket(1234);
+            server = new ServerSocket(587);
             while (true) {
                 System.out.println("Servidor em espera...");
                 client = server.accept();
@@ -41,9 +41,15 @@ public class Servidor {
     }
 
     public void msgReceived(String msg, ConnectionHandler sender) {
-        for (int i = 0; i < list.size(); i++) {
-            if (!list.get(i).equals(sender)) {
-                list.get(i).sendMsg(msg);
+        if(msg.equals("quit")){
+            sender.interrupt();
+            boolean remove = list.remove(sender);
+        }
+        else{
+            for (int i = 0; i < list.size(); i++) {
+                if (!list.get(i).equals(sender)) {
+                    list.get(i).sendMsg(msg);
+                }
             }
         }
     }

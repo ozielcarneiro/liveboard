@@ -45,12 +45,17 @@ public class ConnectionHandler extends Thread {
     @Override
     public void run(){
         String s;
-        while(cliente.isConnected()){
+        while(cliente.isConnected()&&(!this.isInterrupted())){
             try {
                 s = input.readUTF();
                 server.msgReceived(s, this);
                 System.out.println(s);
+                if(s.equals("quit")){
+                    this.interrupt();
+                    System.out.println(toString()+": Interrupted");
+                }
             } catch (IOException ex) {
+                System.out.println("Erro: "+toString());
                 Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
